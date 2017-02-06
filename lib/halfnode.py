@@ -11,6 +11,7 @@ import sys
 import random
 import cStringIO
 from Crypto.Hash import SHA256
+import lyra2re2_hash
 
 from twisted.internet.protocol import Protocol
 from util import *
@@ -197,8 +198,9 @@ class CBlock(object):
             r.append(struct.pack("<I", self.nTime))
             r.append(struct.pack("<I", self.nBits))
             r.append(struct.pack("<I", self.nNonce))
-            self.sha256 = uint256_from_str(SHA256.new(SHA256.new(''.join(r)).digest()).digest())
-        return self.sha256
+            #self.sha256 = uint256_from_str(SHA256.new(SHA256.new(''.join(r)).digest()).digest())
+            self.sha256 = uint256_from_str(lyra2re_hash.getPoWHash(''.join(r)))
+	return self.sha256
 
     def is_valid(self):
         self.calc_sha256()
