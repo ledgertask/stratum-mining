@@ -37,10 +37,11 @@ def setup(on_startup):
     while True:
         try:
             result = (yield bitcoin_rpc.getblocktemplate())
-            if isinstance(result, dict):
+	    if isinstance(result, dict):
                 log.info('Response from bitcoin RPC OK')
                 break
-        except:
+        except Exception, e:
+            log.info(str(e))
             time.sleep(1)
 
     coinbaser = SimpleCoinbaser(bitcoin_rpc, settings.CENTRAL_WALLET)

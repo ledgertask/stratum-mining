@@ -2,6 +2,7 @@ import weakref
 import binascii
 import util
 import StringIO
+import lyra2re2_hash
 
 from twisted.internet import defer
 from lib.exceptions import SubmitException
@@ -137,7 +138,7 @@ class TemplateRegistry(object):
 
     def diff_to_target(self, difficulty):
         '''Converts difficulty to target'''
-        diff1 = 0x00000000ffff0000000000000000000000000000000000000000000000000000
+	diff1 = 0x00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff
         return diff1 / difficulty
 
     def get_job(self, job_id):
@@ -219,7 +220,7 @@ class TemplateRegistry(object):
         header_bin = job.serialize_header(merkle_root_int, ntime_bin, nonce_bin)
 
         # 4. Reverse header and compare it with target of the user
-        hash_bin = util.doublesha(''.join([ header_bin[i*4:i*4+4][::-1] for i in range(0, 20) ]))
+        hash_bin = lyra2re2_hash.getPoWHash(''.join([ header_bin[i*4:i*4+4][::-1] for i in range(0, 20) ]))
         hash_int = util.uint256_from_str(hash_bin)
         block_hash_hex = "%064x" % hash_int
         header_hex = binascii.hexlify(header_bin)

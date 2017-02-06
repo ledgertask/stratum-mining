@@ -56,7 +56,7 @@ class MiningService(GenericService):
 
         session = self.connection_ref().get_session()
         session['extranonce1'] = extranonce1
-        session['difficulty'] = 1 # Following protocol specs, default diff is 1
+        session['difficulty'] = 0.0001 # Following protocol specs, default diff is 1
 
         return Pubsub.subscribe(self.connection_ref(), MiningSubscription()) + (extranonce1_hex, extranonce2_size)
 
